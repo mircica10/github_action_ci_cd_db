@@ -38,10 +38,15 @@ jobs:
 
       - name: Download and install Liquibase
         run: |
-          curl -L https://github.com/liquibase/liquibase/releases/download/v4.24.0/liquibase-4.24.0.tar.gz | tar xz
-          echo "Liquibase downloaded to: $PWD/liquibase"
+          LIQUIBASE_VERSION=4.24.0
+          curl -L https://github.com/liquibase/liquibase/releases/download/v$LIQUIBASE_VERSION/liquibase-$LIQUIBASE_VERSION.tar.gz -o liquibase.tar.gz
+          mkdir liquibase
+          tar -xzf liquibase.tar.gz -C liquibase --strip-components=1
           chmod +x liquibase/liquibase
-          sudo ln -s $PWD/liquibase/liquibase /usr/local/bin/liquibase
+          sudo ln -s "$PWD/liquibase/liquibase" /usr/local/bin/liquibase
+
+      - name: Verify Liquibase install
+        run: liquibase --version
 
       - name: Run Liquibase migration
         env:
