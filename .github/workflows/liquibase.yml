@@ -30,12 +30,20 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Install Liquibase CLI
+      - name: Install Java (required for Liquibase)
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Download and install Liquibase
         run: |
           curl -L https://github.com/liquibase/liquibase/releases/download/v4.24.0/liquibase-4.24.0.tar.gz | tar xz
+          echo "Liquibase downloaded to: $PWD/liquibase"
+          chmod +x liquibase/liquibase
           sudo ln -s $PWD/liquibase/liquibase /usr/local/bin/liquibase
 
-      - name: Run Liquibase Migration
+      - name: Run Liquibase migration
         env:
           LIQUIBASE_URL: jdbc:postgresql://localhost:5432/mydb
           LIQUIBASE_USERNAME: myuser
