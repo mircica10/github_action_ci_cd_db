@@ -5,6 +5,6 @@
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">      
 <!-- add files here -->  
 <include file="changelog/create-table-customers.xml"/>
-<include file="changelog/insert-customers.xml"/>
+<include file="changelog/insert-one-customer.xml"/>
     
 </databaseChangeLog>
