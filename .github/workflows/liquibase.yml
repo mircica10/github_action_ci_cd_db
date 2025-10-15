@@ -1,4 +1,4 @@
-name: Liquibase + PostgreSQL (Official Action)
+name: Liquibase + PostgreSQL CI (using setup-liquibase)
 
 on:
   push:
@@ -27,16 +27,24 @@ jobs:
           --health-retries 5
 
     steps:
-      - name: Checkout repository
+      - name: Checkout repo
         uses: actions/checkout@v3
 
-      - name: Run Liquibase using official GitHub Action
-        uses: liquibase/liquibase-github-action@v4.25.1
+      - name: Setup Liquibase
+        uses: liquibase/setup-liquibase@v1
         with:
-          operation: update
-          changeLogFile: changelog/db.changelog.xml
-          url: jdbc:postgresql://localhost:5432/mydb
-          username: myuser
-          password: mypassword
-          classpath: /usr/share/java/postgresql.jar
-          driver: org.postgresql.Driver
+          version: '4.32.0'     # pick a version that exists
+          edition: 'oss'        # or 'pro' if you have a license
+
+      - name: Run Liquibase Update
+        env:
+          LIQUIBASE_URL: jdbc:postgresql://localhost:5432/mydb
+          LIQUIBASE_USERNAME: myuser
+          LIQUIBASE_PASSWORD: mypassword
+        run: |
+          liquibase \
+            --changeLogFile=changelog/db.changelog.xml \
+            --url=$LIQUIBASE_URL \
+            --username=$LIQUIBASE_USERNAME \
+            --password=$LIQUIBASE_PASSWORD \
+            update
