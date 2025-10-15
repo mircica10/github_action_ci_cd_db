@@ -55,7 +55,7 @@ jobs:
           sudo apt-get install -y postgresql-client
           count=$(PGPASSWORD=mypassword psql -h localhost -U myuser -d mydb -t -c "select count(*) from customers;" | xargs)
           echo "row count: #$count#"
-          if ["$count" -ne 1]; then
+          if [ "$count" -ne 1 ]; then
             echo "expected 1 row, found $count"
             exit 1
           else
