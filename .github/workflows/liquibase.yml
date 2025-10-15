@@ -43,7 +43,7 @@ jobs:
           LIQUIBASE_PASSWORD: mypassword
         run: |
           liquibase \
-            --changeLogFile=changelog/db.changelog.xml \
+            --changeLogFile=changelog/db.changelog-master.xml \
             --url=$LIQUIBASE_URL \
             --username=$LIQUIBASE_USERNAME \
             --password=$LIQUIBASE_PASSWORD \
