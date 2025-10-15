@@ -53,12 +53,12 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y postgresql-client
 
-      - name: verify that only one row exists in customers table
+      - name: verify that only 3 rows exist in customers table
         run: |
           count=$(PGPASSWORD=mypassword psql -h localhost -U myuser -d mydb -t -c "select count(*) from customers;" | xargs)
           echo "row count: #$count#"
-          if [ "$count" -ne 1 ]; then
-            echo "expected 1 row, found $count"
+          if [ "$count" -ne 3 ]; then
+            echo "expected 3 rows, found $count"
             exit 1
           else
             echo "exaclty 1 row found in the customers table, perfect!"
