@@ -56,7 +56,7 @@ jobs:
       - name: verify that only 3 rows exist in customers table
         run: |
           count=$(PGPASSWORD=mypassword psql -h localhost -U myuser -d mydb -t -c "select count(*) from customers;" | xargs)
-          echo "row count: #$count#"
+          echo "row count: $count"
           if [ "$count" -ne 3 ]; then
             echo "expected 3 rows, found $count"
             exit 1
