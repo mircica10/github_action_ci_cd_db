@@ -1,0 +1,50 @@
+name: Liquibase + PostgreSQL CI
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'changelog/**'
+
+jobs:
+  liquibase:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:15
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_DB: mydb
+          POSTGRES_USER: myuser
+          POSTGRES_PASSWORD: mypassword
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install Liquibase CLI
+        run: |
+          curl -L https://github.com/liquibase/liquibase/releases/download/v4.24.0/liquibase-4.24.0.tar.gz | tar xz
+          sudo ln -s $PWD/liquibase/liquibase /usr/local/bin/liquibase
+
+      - name: Run Liquibase Migration
+        env:
+          LIQUIBASE_URL: jdbc:postgresql://localhost:5432/mydb
+          LIQUIBASE_USERNAME: myuser
+          LIQUIBASE_PASSWORD: mypassword
+        run: |
+          liquibase \
+            --changeLogFile=changelog/db.changelog.xml \
+            --url=$LIQUIBASE_URL \
+            --username=$LIQUIBASE_USERNAME \
+            --password=$LIQUIBASE_PASSWORD \
+            --driver=org.postgresql.Driver \
+            update
