@@ -1,4 +1,4 @@
-name: Liquibase + PostgreSQL CI
+name: Liquibase + PostgreSQL (Official Action)
 
 on:
   push:
@@ -30,34 +30,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Install Java (required for Liquibase)
-        uses: actions/setup-java@v3
+      - name: Run Liquibase using official GitHub Action
+        uses: liquibase/liquibase-github-action@v4.25.1
         with:
-          distribution: 'temurin'
-          java-version: '17'
-
-      - name: Download and install Liquibase
-        run: |
-          LIQUIBASE_VERSION=4.24.0
-          curl -L https://github.com/liquibase/liquibase/releases/download/v$LIQUIBASE_VERSION/liquibase-$LIQUIBASE_VERSION.tar.gz -o liquibase.tar.gz
-          mkdir liquibase
-          tar -xzf liquibase.tar.gz -C liquibase --strip-components=1
-          chmod +x liquibase/liquibase
-          sudo ln -s "$PWD/liquibase/liquibase" /usr/local/bin/liquibase
-
-      - name: Verify Liquibase install
-        run: liquibase --version
-
-      - name: Run Liquibase migration
-        env:
-          LIQUIBASE_URL: jdbc:postgresql://localhost:5432/mydb
-          LIQUIBASE_USERNAME: myuser
-          LIQUIBASE_PASSWORD: mypassword
-        run: |
-          liquibase \
-            --changeLogFile=changelog/db.changelog.xml \
-            --url=$LIQUIBASE_URL \
-            --username=$LIQUIBASE_USERNAME \
-            --password=$LIQUIBASE_PASSWORD \
-            --driver=org.postgresql.Driver \
-            update
+          operation: update
+          changeLogFile: changelog/db.changelog.xml
+          url: jdbc:postgresql://localhost:5432/mydb
+          username: myuser
+          password: mypassword
+          classpath: /usr/share/java/postgresql.jar
+          driver: org.postgresql.Driver
