@@ -7,4 +7,5 @@
 <include file="changelog/create-table-customers.xml"/>
 <include file="changelog/insert-one-customer.xml"/>
 <include file="changelog/insert-second-customer.xml"/>    
+<include file="changelog/insert-third-customer.xml"/>        
 </databaseChangeLog>
