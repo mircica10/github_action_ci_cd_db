@@ -49,10 +49,13 @@ jobs:
             --password=$LIQUIBASE_PASSWORD \
             update
 
-      - name: verify that only one row exists in customers table
+      - name: install psql
         run: |
           sudo apt-get update
           sudo apt-get install -y postgresql-client
+
+      - name: verify that only one row exists in customers table
+        run: |
           count=$(PGPASSWORD=mypassword psql -h localhost -U myuser -d mydb -t -c "select count(*) from customers;" | xargs)
           echo "row count: #$count#"
           if [ "$count" -ne 1 ]; then
